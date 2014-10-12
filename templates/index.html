@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dilemma: Decision Making for the Truly Lazy</title>
+	<link rel="stylesheet" type="text/css" href="/static/main.css">
+</head>
+<body>
+	<div id="master">
+		<h1>Dilemma</h1>
+		<h2>Decision making for the truly lazy. Anonymously crowdsource difficult (or easy) choices.</h2>
+		<hr>
+		<h4>Enter your dilemma and two options. 
+		Then, let random online strangers make the choice for you.</h4>
+		<form action="/api/dilemma/{{ display }}" method="POST">
+			Dilemma: <input name="dilemma" type="text" placeholder="Example: Should I buy a Pepsi, or a Coke?" size="70" maxlength="120" required /><br />
+			Option 1: <input name="option1" type="text" placeholder="Pepsi" size="15" maxlength="15" required /><br />
+			Option 2: <input name="option2" type="text" placeholder="Coke" size="15" maxlength="15" required /><br />
+			<input type="submit" />
+		</form>
+		<hr>
+		<br />
+		<h2 align="center">Dilemmas Feed</h2>
+		<div id="feed">
+			{% for dilemma in dilemmas | reverse %}
+			{% if loop.index <= display %}
+				<div class="dilemma">
+					<b>{{loop.index}}. {{dilemma[0]}}</b>
+					<br />
+					Votes for {{dilemma[1]}}: {{dilemma[4]}} |
+					Votes for {{dilemma[2]}}: {{dilemma[5]}} 					
+					<form action="/api/vote/{{ dilemma[6] }}/{{ display }}" method="POST">
+						<input type="radio" name="vote" value="option1" required >{{dilemma[1]}}
+						<input type="radio" name="vote" value="option2" required >{{dilemma[2]}}
+						<input type="submit" value="Vote!" />
+					</form>
+				</div>
+				<br />
+			{% endif %}
+			{% endfor %}
+			<div id="extend">
+				<a href="/api/show/{{ display }}">Show 10 more.</a>
+			</div>
+		</div>
+		<div>
+			<p align="center">Allan Zhou and Won Park</p>
+		</div>
+	</div>
+</body>
+</html>
